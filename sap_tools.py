@@ -7,12 +7,14 @@ from datetime import datetime, timedelta, time
 
 
 def data_source(file):
+    """DataSource meta data downloaded from table RSDSSEGFD as Excel file"""
     print('Reading DataSource file {}'.format(file))
     df_ds = pd.read_excel(file)
     return df_ds.sort_values(by=['SEGID', 'POSIT'])
 
 
 def converters(df_ds):
+    """Basic cleanup for specific types"""
     conv = {}
     for field in df_ds[df_ds.DATATYPE == 'CHAR'].FIELDNM:
         conv.update({field: str}) 
@@ -27,6 +29,7 @@ def converters(df_ds):
     
 
 def se16_data(excel_filename, df_ds):
+    """Creats a pandas DataFrame based on on downloaded data and it's DataSource definition"""
     print('Reading file {}'.format(excel_filename))
     df_excel = pd.read_excel(excel_filename, converters=converters(df_ds))
     import_columns = df_ds['FIELDNM'].tolist()
